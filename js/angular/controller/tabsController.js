@@ -76,7 +76,31 @@ function($scope, $element, $ionicHistory) {
       }
 
     } else if (selectedTabIndex !== tabIndex) {
-      forEach(self.tabs, function(tab) {
+  
+      if (shouldEmitEvent) {
+        $scope.$emit('$ionicHistory.change', {
+          type: 'tab',
+          tabIndex: tabIndex,
+          historyId: tab.$historyId,
+          navViewName: tab.navViewName,
+          hasNavView: !!tab.navViewName,
+          title: tab.title,
+          url: tab.href,
+          uiSref: tab.uiSref
+        });
+        $scope.$on('$stateChangeStart',function(){
+            self.changeTab(tab, tabIndex);
+        });
+      }
+      else{
+          self.changeTab(tab, tabIndex);
+      }
+
+    }
+  };
+
+  self.changeTab = function(tab, tabIndex){
+    forEach(self.tabs, function(tab) {
         self.deselect(tab);
       });
 
@@ -91,20 +115,7 @@ function($scope, $element, $ionicHistory) {
       tab.$tabSelected = true;
       (tab.onSelect || noop)();
 
-      if (shouldEmitEvent) {
-        $scope.$emit('$ionicHistory.change', {
-          type: 'tab',
-          tabIndex: tabIndex,
-          historyId: tab.$historyId,
-          navViewName: tab.navViewName,
-          hasNavView: !!tab.navViewName,
-          title: tab.title,
-          url: tab.href,
-          uiSref: tab.uiSref
-        });
-      }
-    }
-  };
+  }
 
   self.hasActiveScope = function() {
     for (var x = 0; x < self.tabs.length; x++) {
