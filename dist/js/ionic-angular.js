@@ -8367,7 +8367,7 @@ function($scope, $element, $ionicHistory) {
       }
 
     } else if (selectedTabIndex !== tabIndex) {
-  
+
       if (shouldEmitEvent) {
         $scope.$emit('$ionicHistory.change', {
           type: 'tab',
@@ -8379,7 +8379,8 @@ function($scope, $element, $ionicHistory) {
           url: tab.href,
           uiSref: tab.uiSref
         });
-        $scope.$on('$stateChangeStart',function(){
+        var stateChangeStart = $scope.$on('$stateChangeStart',function(){
+            stateChangeStart();
             self.changeTab(tab, tabIndex);
         });
       }
